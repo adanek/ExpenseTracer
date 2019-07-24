@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using ExpenseTracer.Application.Expenses.Queries;
+using ExpenseTracer.Application.Infrastructure;
 using ExpenseTracer.Application.Interfaces;
 using ExpenseTracer.Common.Dates;
 using ExpenseTracer.Persistence;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace ExpenseTracer.Web.Api
 {
@@ -29,7 +32,7 @@ namespace ExpenseTracer.Web.Api
 
             // Add MediatR
             services.AddMediatR(typeof(GetExpenseListQuery).GetTypeInfo().Assembly);
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -37,6 +40,28 @@ namespace ExpenseTracer.Web.Api
             services.AddDbContext<IDatabaseService, DatabaseService>(options =>
             {
                 options.UseInMemoryDatabase("ExpenseTracerContext");
+            });
+
+            // Add Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {
+                    Title = "Expense Tracer Api",
+                    Version = "v1",
+                    Description = "Provides the functionality to trace your expenses",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Andreas Danek",
+                        Email = "not.my@mail.com",
+                        Url = new Uri("https://www.linkedin.com/in/andreas-danek/"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "The MIT License",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
             });
         }
 
@@ -52,6 +77,23 @@ namespace ExpenseTracer.Web.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            using(var scope = app.ApplicationServices.CreateScope())
+            using (var context = scope.ServiceProvider.GetRequiredService<IDatabaseService>())
+            {
+                var dateTimeProvider = scope.ServiceProvider.GetRequiredService<IDateTimeProvider>();
+                DatabaseInitializer.Initialize(context, dateTimeProvider).GetAwaiter().GetResult();
+            }
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

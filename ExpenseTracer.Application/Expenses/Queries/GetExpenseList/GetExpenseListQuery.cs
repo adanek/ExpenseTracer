@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ExpenseTracer.Application.Interfaces;
 using ExpenseTracer.Common.Dates;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracer.Application.Expenses.Queries
 {
@@ -14,37 +18,30 @@ namespace ExpenseTracer.Application.Expenses.Queries
 
     public class GetExpenseListQueryHandler : IRequestHandler<GetExpenseListQuery, ExpenseListViewModel>
     {
+        private readonly IDatabaseService databaseService;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public GetExpenseListQueryHandler(IDateTimeProvider dateTimeProvider)
+        public GetExpenseListQueryHandler(IDatabaseService databaseService, IDateTimeProvider dateTimeProvider)
         {
+            this.databaseService = databaseService;
             this.dateTimeProvider = dateTimeProvider;
         }
 
 
-        public Task<ExpenseListViewModel> Handle(GetExpenseListQuery request, CancellationToken cancellationToken)
+        public async Task<ExpenseListViewModel> Handle(GetExpenseListQuery request, CancellationToken cancellationToken)
         {
-            var vm = new ExpenseListViewModel()
+            var expenses = await databaseService.Expenses.ToListAsync();
+
+            var result = expenses.Select(e => new ExpenseLookUpModel()
             {
-                Expenses = new List<ExpenseLookUpModel>()
-                {
-                    new ExpenseLookUpModel()
-                    {
-                        Id = 1,
-                        Amount = 12.34m,
-                        Timestamp = this.dateTimeProvider.Now
-                    },
+                Id = e.Id,
+                Amount = e.Amount,
+                Timestamp = e.Timestamp.Trim(TimeSpan.TicksPerMinute)
+            });
 
-                    new ExpenseLookUpModel()
-                    {
-                        Id = 2,
-                        Amount = 23m,
-                        Timestamp = this.dateTimeProvider.Now
-                    }
-                }
-            };
+            var vm = new ExpenseListViewModel() { Expenses = result.ToList() };
 
-            return Task.FromResult(vm);
+            return vm;
         }
     }
 }

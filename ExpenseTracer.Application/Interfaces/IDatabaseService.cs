@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ExpenseTracer.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace ExpenseTracer.Application.Interfaces
     /// <summary>
     /// Provides the service to read and write persistent data
     /// </summary>
-    public interface IDatabaseService
+    public interface IDatabaseService: IDisposable
     {
         /// <summary>
         /// Gets or sets a collection of <see cref="Expense"/>

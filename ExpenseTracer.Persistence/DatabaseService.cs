@@ -1,5 +1,10 @@
-﻿using ExpenseTracer.Application.Interfaces;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ExpenseTracer.Application.Interfaces;
+using ExpenseTracer.Common.Dates;
 using ExpenseTracer.Domain.Entities;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracer.Persistence
@@ -15,6 +20,37 @@ namespace ExpenseTracer.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseService).Assembly);
+        }
+    }
+
+    public class DatabaseInitializer
+    {
+        public static async Task Initialize(IDatabaseService context, IDateTimeProvider dateTimeProvider)
+        {
+            if (context.Expenses.Any())
+            {
+                return;
+            }
+
+            context.Expenses.AddRange(new[]
+                {
+                    new Expense()
+                    {
+                        Id = 1,
+                        Amount = 12.34m,
+                        Timestamp = dateTimeProvider.Now
+                    },
+
+                    new Expense()
+                    {
+                        Id = 2,
+                        Amount = 23m,
+                        Timestamp = dateTimeProvider.Now
+                    }
+                });
+
+            await context.SaveChangesAsync(CancellationToken.None);
+
         }
     }
 }
