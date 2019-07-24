@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 using ExpenseTracer.Application.Expenses.Queries;
+using ExpenseTracer.Application.Interfaces;
 using ExpenseTracer.Common.Dates;
+using ExpenseTracer.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +33,11 @@ namespace ExpenseTracer.Web.Api
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddDbContext<IDatabaseService, DatabaseService>(options =>
+            {
+                options.UseInMemoryDatabase("ExpenseTracerContext");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

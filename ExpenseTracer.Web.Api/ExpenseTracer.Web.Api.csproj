@@ -16,6 +16,7 @@
     <ProjectReference Include="..\ExpenseTracer.Application\ExpenseTracer.Application.csproj" />
     <ProjectReference Include="..\ExpenseTracer.Common\ExpenseTracer.Common.csproj" />
     <ProjectReference Include="..\ExpenseTracer.Domain\ExpenseTracer.Domain.csproj" />
+    <ProjectReference Include="..\ExpenseTracer.Persistence\ExpenseTracer.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
