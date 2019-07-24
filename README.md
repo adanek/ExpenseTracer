@@ -12,3 +12,4 @@ Demo application for clean architecture
 * SignalR docu
 * AspCore 2.2
 * Build and host in docker
+
