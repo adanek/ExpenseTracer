@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using ExpenseTracer.Application.Expenses.Commands;
 using ExpenseTracer.Application.Expenses.Queries;
 using ExpenseTracer.Application.Infrastructure;
 using ExpenseTracer.Application.Interfaces;
 using ExpenseTracer.Common.Dates;
 using ExpenseTracer.Persistence;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,9 +35,11 @@ namespace ExpenseTracer.Web.Api
             // Add MediatR
             services.AddMediatR(typeof(GetExpenseListQuery).GetTypeInfo().Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>());
 
             services.AddDbContext<IDatabaseService, DatabaseService>(options =>
             {

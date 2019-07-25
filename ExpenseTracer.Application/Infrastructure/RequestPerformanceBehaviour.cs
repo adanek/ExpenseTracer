@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -35,3 +36,4 @@ namespace ExpenseTracer.Application.Infrastructure
         }
     }
 }
+

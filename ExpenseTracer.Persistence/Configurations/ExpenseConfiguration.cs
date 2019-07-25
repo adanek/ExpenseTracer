@@ -8,9 +8,10 @@ namespace ExpenseTracer.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Expense> builder)
         {
-            builder.Property(e => e.Id).HasColumnName("ExpenseId").IsRequired();
+            builder.Property(e => e.Id).HasColumnName("ExpenseId").IsRequired().UseSqlServerIdentityColumn();
 
             builder.Property(e => e.Amount).HasColumnType("money");
+            
         }
     }
 }

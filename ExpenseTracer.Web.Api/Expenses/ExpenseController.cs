@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ExpenseTracer.Application.Expenses.Commands;
 using ExpenseTracer.Application.Expenses.Queries;
 using ExpenseTracer.Application.Expenses.Queries.GetExpenseDetails;
 using ExpenseTracer.Web.Api.Common;
@@ -20,6 +21,13 @@ namespace ExpenseTracer.Web.Api.Controllers
         public async Task<ActionResult<ExpenseDetailViewModel>> Get(int id)
         {
             return Ok(await Mediator.Send(new GetExpenseDetailQuery(id)));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateExpenseCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
         }
     }
 }
