@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ExpenseTracer.Application.Interfaces;
 using ExpenseTracer.Common.Dates;
 using ExpenseTracer.Domain.Entities;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracer.Persistence
