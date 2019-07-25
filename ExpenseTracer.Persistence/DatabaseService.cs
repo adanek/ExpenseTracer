@@ -35,14 +35,12 @@ namespace ExpenseTracer.Persistence
                 {
                     new Expense()
                     {
-                        Id = 1,
                         Amount = 12.34m,
                         Timestamp = dateTimeProvider.Now
                     },
 
                     new Expense()
                     {
-                        Id = 2,
                         Amount = 23m,
                         Timestamp = dateTimeProvider.Now
                     }
