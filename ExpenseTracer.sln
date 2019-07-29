@@ -12,11 +12,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7E0EC2C5-CE8D-4B4A-AE34-21206F90BD0B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracer.Application", "ExpenseTracer.Application\ExpenseTracer.Application.csproj", "{24885499-6926-4F54-A903-C828899B2965}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracer.Persistence", "ExpenseTracer.Persistence\ExpenseTracer.Persistence.csproj", "{01379F49-8BB7-4DC4-9B3B-C521B349D3CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseTracer.Persistence", "ExpenseTracer.Persistence\ExpenseTracer.Persistence.csproj", "{01379F49-8BB7-4DC4-9B3B-C521B349D3CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

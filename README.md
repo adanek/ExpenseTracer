@@ -1,7 +1,7 @@
 # ExpenseTracer
 Demo application for clean architecture
 
-## Targets
+## Goals
 * DDD
 * IdentityServer for authentication
 * PolicyServer for authorization

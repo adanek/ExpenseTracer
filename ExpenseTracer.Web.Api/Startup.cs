@@ -43,7 +43,8 @@ namespace ExpenseTracer.Web.Api
 
             services.AddDbContext<IDatabaseService, DatabaseService>(options =>
             {
-                options.UseInMemoryDatabase("ExpenseTracerContext");
+                options.UseSqlServer(Configuration.GetConnectionString("ExpenseTracerContext"));
+                //options.UseInMemoryDatabase("ExpenseTracerContext");
             });
 
             // Add Swagger

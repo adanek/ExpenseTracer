@@ -8,8 +8,9 @@ namespace ExpenseTracer.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Expense> builder)
         {
-            builder.Property(e => e.Id).HasColumnName("ExpenseId").ValueGeneratedOnAdd();
-
+            builder.ToTable("Expenses");
+            builder.Property(e => e.Id).HasColumnName("Id").ValueGeneratedOnAdd();
+            builder.Property(e => e.Timestamp).IsRequired();
             builder.Property(e => e.Amount).HasColumnType("money");
             
         }

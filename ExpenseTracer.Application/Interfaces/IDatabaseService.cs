@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ExpenseTracer.Domain.Entities;
@@ -9,18 +10,32 @@ namespace ExpenseTracer.Application.Interfaces
     /// <summary>
     /// Provides the service to read and write persistent data
     /// </summary>
-    public interface IDatabaseService: IDisposable
+    public interface IDatabaseService : IAsyncTransaction
     {
         /// <summary>
         /// Gets or sets a collection of <see cref="Expense"/>
         /// </summary>
-        DbSet<Expense> Expenses { get; set; }
+        IRepository<Expense> Expenses { get; }
+    }
 
+    public interface IRepository<T>
+    {
+        IQueryable<T> GetAll();
+
+        T Get(int id);
+
+        void Add(T entity);
+
+        void Remove(T entity);
+    }
+
+
+    public interface IAsyncTransaction : IDisposable
+    {
         /// <summary>
-        /// Saves the changes
+        /// Commits all pending changes
         /// </summary>
-        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        Task CommitAsync();
     }
 }

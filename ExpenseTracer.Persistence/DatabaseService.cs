@@ -14,7 +14,15 @@ namespace ExpenseTracer.Persistence
         {
         }
 
-        public DbSet<Expense> Expenses { get; set; }
+        DbSet<Expense> Expenses;
+
+        IRepository<Expense> IDatabaseService.Expenses {
+            get => this.Expenses;
+
+        public Task CommitAsync()
+        {
+            throw new System.NotImplementedException();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
